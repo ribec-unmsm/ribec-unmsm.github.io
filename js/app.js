@@ -1,11 +1,27 @@
 // Lógica del sitio RIBEC. Cada página incluye datos.js antes que este archivo
 // y solo se renderiza lo que exista en el documento.
 
-// Lógica del sitio RIBEC. Cada página incluye datos.js antes que este archivo
-// y solo se renderiza lo que exista en el documento.
-
 const lang = localStorage.getItem('lang') || 'es';
 const isEn = lang === 'en';
+const typeName = t => (isEn ? TYPES_EN : TYPES)[t];
+document.documentElement.lang = lang;
+
+// En la web publicada, oculta "index.html" y ".html" de la barra de direcciones
+// (GitHub Pages abre /miembros como miembros.html). Al abrir los archivos
+// desde la computadora no se toca nada, para que la vista previa siga funcionando.
+if (location.protocol !== "file:") {
+  const clean = location.pathname.replace(/index\.html$/, "").replace(/\.html$/, "");
+  if (clean !== location.pathname) history.replaceState(null, "", clean + location.search + location.hash);
+  document.addEventListener("click", e => {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+    const a = e.target.closest("a[href]");
+    if (a && a.origin === location.origin && /\.html$/.test(a.pathname)) {
+      e.preventDefault();
+      location.href = a.pathname.replace(/index\.html$/, "").replace(/\.html$/, "") + a.search + a.hash;
+    }
+  });
+}
+if (isEn) document.title = "RIBEC · " + TEXTOS.en.banner_tit;
 
 document.addEventListener("DOMContentLoaded", () => {
   // Traduce los textos estáticos y placeholders del HTML
@@ -51,10 +67,10 @@ function refHTML(p) {
   const vol = x.v ? `, ${esc(x.v)}` : "";
   const venue = journal
     ? `<span class="jo">${esc(journal)}</span>${vol}, ${y}.`
-    : `<span class="ty">${TYPES[t]}</span>${vol}, ${y}.`;
+    : `<span class="ty">${typeName(t)}</span>${vol}, ${y}.`;
   const links = [
     x.doi ? `<a href="https://doi.org/${esc(x.doi)}" target="_blank" rel="noopener">DOI</a>` : "",
-    x.pdf ? `<a href="articulos/${esc(x.pdf)}" target="_blank" rel="noopener">${x.pdf.endsWith(".png") ? "Póster" : "PDF"}</a>` : ""
+    x.pdf ? `<a href="articulos/${esc(x.pdf)}" target="_blank" rel="noopener">${x.pdf.endsWith(".png") ? typeName("O") : "PDF"}</a>` : ""
   ].filter(Boolean).join(" · ");
   return `<li><span class="au">${authorsHTML(authors)}</span>. <span class="ti">${italic(title)}</span>. ${venue}${links ? ` <span class="lk">${links}</span>` : ""}</li>`;
 }
@@ -64,8 +80,9 @@ const homeMembers = document.getElementById("home-members");
 if (homeMembers) {
   homeMembers.innerHTML = Object.values(MEMBERS).map(m => `<li><a href="miembros.html">${esc(m.name)}</a></li>`).join("");
   const years = PUBS.map(p => p[0]);
-  document.getElementById("home-stats").textContent =
-    `${PUBS.length} trabajos publicados entre ${Math.min(...years)} y ${Math.max(...years)}: artículos en revistas indexadas, capítulos de libro, ponencias y pósteres en congresos, y preprints. La lista completa está en la sección Publicaciones.`;
+  document.getElementById("home-stats").textContent = isEn
+    ? `${PUBS.length} works published between ${Math.min(...years)} and ${Math.max(...years)}: articles in indexed journals, book chapters, conference papers and posters, and preprints. The full list is available in the Publications section.`
+    : `${PUBS.length} trabajos publicados entre ${Math.min(...years)} y ${Math.max(...years)}: artículos en revistas indexadas, capítulos de libro, ponencias y pósteres en congresos, y preprints. La lista completa está en la sección Publicaciones.`;
 }
 
 /* ---------- Miembros ---------- */
@@ -75,7 +92,7 @@ if (membersEl) {
     const extension = (k === 'D') ? 'jpg' : 'webp';
     return `
     <div class="member-card">
-      <img src="img/${k}.${extension}" alt="Foto de ${esc(m.name)}" class="member-photo" onerror="this.src='img/default.png'">
+      <img src="img/${k}.${extension}" alt="${isEn ? "Photo of" : "Foto de"} ${esc(m.name)}" class="member-photo" onerror="this.src='img/default.png'">
       <div class="nm">${esc(m.name)}</div>
       <div class="rl">${esc(isEn && m.role_en ? m.role_en : m.role)}</div>
       ${m.lines ? `<div class="rl">${isEn ? "Research areas" : "Líneas"}: ${esc(isEn && m.lines_en ? m.lines_en : m.lines)}</div>` : ""}
@@ -103,11 +120,11 @@ if (who) {
     const f = who.value, s = plain(q.value.trim());
     const items = PUBS.filter(p =>
       (f === "all" || p[6].includes(f)) &&
-      (!s || plain(p[3] + " " + p[4] + " " + p[5] + " " + TYPES[p[2]]).includes(s)));
+      (!s || plain(p[3] + " " + p[4] + " " + p[5] + " " + typeName(p[2])).includes(s)));
     document.getElementById("count").textContent =
       `${items.length} ${items.length === 1 ? (isEn ? "work" : "referencia") : (isEn ? "works" : "referencias")}${f === "all" ? "" : " " + (isEn ? "by" : "de") + " " + MEMBERS[f].name}${s ? " " + (isEn ? "matching the search" : "que coinciden con la búsqueda") : ""}. ${isEn ? "Group members are shown in bold." : "Los miembros del grupo aparecen en negrita."}`;
     const list = document.getElementById("list"), nav = document.getElementById("pubnav");
-    if (!items.length) { list.innerHTML = '<p class="empty">No hay referencias con ese texto.</p>'; nav.innerHTML = ""; return; }
+    if (!items.length) { list.innerHTML = `<p class="empty">${isEn ? "No works match that search." : "No hay referencias con ese texto."}</p>`; nav.innerHTML = ""; return; }
     const pre = items.filter(p => p[2] === "P");
     const groups = {};
     items.filter(p => p[2] !== "P").forEach(p => (groups[p[0]] ||= []).push(p));

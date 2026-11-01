@@ -16,7 +16,7 @@ const MEMBERS = {
     name: "Stephen Santos",
     alias: ["Victor Santos-Linares", "Victor Stephen Santos-Linares", "Víctor S. Santos"],
     role: "Bachiller en Ciencias Biológicas. Investigador en la Facultad de Ciencias Biológicas, Laboratorio de Ecología Tropical y Análisis de Datos, UNMSM. Firma sus artículos como Victor Santos-Linares.",
-    role_en: "Bachelor of Biological Sciences. Researcher at the Faculty of Biological Sciences, Tropical Ecology and Data Analysis Laboratory, UNMSM. Publishes under the name Victor Santos-Linares.",
+    role_en: "Holds a bachelor's degree in Biological Sciences. Researcher at the Faculty of Biological Sciences, Tropical Ecology and Data Analysis Laboratory, UNMSM. Publishes under the name Victor Santos-Linares.",
     lines: "Biología de la conservación, biodiversidad, ecología de ecosistemas. Trabajo de campo, análisis de datos, estadística y sistemas de información geográfica.",
     lines_en: "Conservation biology, biodiversity, ecosystem ecology. Fieldwork, data analysis, statistics, and geographic information systems (GIS).",
     rg: "https://www.researchgate.net/profile/Stephen-Santos",
@@ -137,27 +137,54 @@ const TEXTOS = {
     miembros_nota2: "Coautores que aparecen de forma recurrente en las publicaciones del grupo.",
     lbl_autor: "Autor",
     opt_todos: "Todos los miembros",
-    placeholder_buscar: "Buscar en título, revista o autores"
+    placeholder_buscar: "Buscar en título, revista o autores",
+    colaboradores_lista: `
+      <li>Doris Gómez-Ticerán, Facultad de Ciencias Matemáticas, Universidad Nacional Mayor de San Marcos</li>
+      <li>Abel Salinas-Inga, Universidad Nacional Mayor de San Marcos</li>
+      <li>Luis Alberto Allccahuaman, Universidad Nacional Mayor de San Marcos</li>
+      <li>Joaquina Adelaida Albán Castillo, Universidad Nacional Mayor de San Marcos</li>
+      <li>Olga Lidia Solano Dávila, Universidad Nacional Mayor de San Marcos</li>
+      <li>Octavio Monroy-Vilchis y Martha M. Zarco-González, Universidad Autónoma del Estado de México</li>
+      <li>Enoc Jara-Peña, Laboratorio de Fitología Aplicada, Universidad Nacional Mayor de San Marcos</li>
+      <li>Marcel La Rosa-Sánchez y Franco Angeles-Alvarez, Laboratorio de Ecología Tropical y Análisis de Datos, Universidad Nacional Mayor de San Marcos</li>`,
+    link_unmsm: "Universidad Nacional Mayor de San Marcos",
+    link_fcb: "Facultad de Ciencias Biológicas, UNMSM",
+    txt_en: "en"
   },
   en: {
-    topbar_inst: "National Major University of San Marcos · Faculty of Biological Sciences",
+    topbar_inst: "National University of San Marcos · Faculty of Biological Sciences",
     topbar_loc: "Lima, Peru",
-    banner_tit: "Network of Researchers in Biodiversity, Ecology, and Conservation",
-    banner_inst: "Research Group · Faculty of Biological Sciences, UNMSM",
+    banner_tit: "Research Network on Biodiversity, Ecology, and Conservation",
+    banner_inst: "Research group · Faculty of Biological Sciences, UNMSM",
     nav_inicio: "Home", nav_miembros: "Members", nav_publicaciones: "Publications", nav_enlaces: "Links",
-    tit_investigadores: "Group Researchers", tit_colaboradores: "Frequent Collaborators",
-    tit_institucion: "Institution", tit_perfiles: "Research profiles", tit_revistas: "Journals in which the group publishes",
-    lema: "\"Researching today to conserve tomorrow.\"",
-    footer_inst: "Network of Researchers in Biodiversity, Ecology, and Conservation · National University of San Marcos.",
-    inicio_desc1: "The <strong>Network of Researchers in Biodiversity, Ecology, and Conservation (RIBEC)</strong> is a research group at the <strong>National University of San Marcos (UNMSM)</strong>, affiliated with the Faculty of Biological Sciences and involving the Departments of Biological Sciences and Botany.",
+    tit_investigadores: "Group researchers", tit_colaboradores: "Frequent collaborators",
+    tit_institucion: "Institution", tit_perfiles: "Research profiles", tit_revistas: "Journals where the group publishes",
+    lema: "\"Research today to protect tomorrow.\"",
+    footer_inst: "Research Network on Biodiversity, Ecology, and Conservation · National University of San Marcos.",
+    inicio_desc1: "The <strong>Research Network on Biodiversity, Ecology, and Conservation (RIBEC)</strong> is a research group at the <strong>National University of San Marcos (UNMSM)</strong>, affiliated with the Faculty of Biological Sciences, with participation from the Departments of Biological Sciences and Botany.",
     inicio_desc2: "The group is led by Jehoshua Macedo-Bedoya and brings together researchers from UNMSM and the University of Valparaíso.",
     inicio_desc3: "Our research focuses on the ecology and conservation of Peruvian ecosystems, including Amazonian aguajales (palm swamps) and floodplain forests, relict <i>Polylepis</i> forests in the Andes, biomass and carbon stocks, ant gardens, and the flora and ethnobotany of Cajatambo. We also study the taxonomy and distribution of tardigrades, birds, fungi, and insects.",
-    inicio_tit_miembros: "Members", inicio_tit_prod: "Output", inicio_tit_contacto: "Contact",
+    inicio_tit_miembros: "Members", inicio_tit_prod: "Research output", inicio_tit_contacto: "Contact",
     inicio_email: "Email:",
-    miembros_nota1: "Members registered with the RIBEC group on ResearchGate, as well as researchers from UNMSM who publish in collaboration with the network.",
-    miembros_nota2: "Co-authors who appear repeatedly in the group’s publications.",
+    miembros_nota1: "Members of the RIBEC group on ResearchGate, as well as UNMSM researchers who publish with the network.",
+    miembros_nota2: "Co-authors who appear frequently in the group’s publications.",
     lbl_autor: "Author",
     opt_todos: "All members",
-    placeholder_buscar: "Search in title, journal or authors"
+    placeholder_buscar: "Search by title, journal or author",
+    colaboradores_lista: `
+      <li>Doris Gómez-Ticerán, Faculty of Mathematical Sciences, National University of San Marcos</li>
+      <li>Abel Salinas-Inga, National University of San Marcos</li>
+      <li>Luis Alberto Allccahuaman, National University of San Marcos</li>
+      <li>Joaquina Adelaida Albán Castillo, National University of San Marcos</li>
+      <li>Olga Lidia Solano Dávila, National University of San Marcos</li>
+      <li>Octavio Monroy-Vilchis and Martha M. Zarco-González, Autonomous University of the State of Mexico</li>
+      <li>Enoc Jara-Peña, Applied Phytology Laboratory, National University of San Marcos</li>
+      <li>Marcel La Rosa-Sánchez and Franco Angeles-Alvarez, Tropical Ecology and Data Analysis Laboratory, National University of San Marcos</li>`,
+    link_unmsm: "National University of San Marcos",
+    link_fcb: "Faculty of Biological Sciences, UNMSM",
+    txt_en: "on"
   }
 };
+
+// Tipos de publicación en inglés
+const TYPES_EN = { A: "Article", P: "Preprint", C: "Conference paper", O: "Poster", K: "Book chapter" };
