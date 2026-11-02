@@ -37,7 +37,8 @@ const MEMBERS = {
     role: "Facultad de Ciencias Biológicas, Universidad Nacional Mayor de San Marcos. Miembro de la RIBEC.",
     role_en: "Faculty of Biological Sciences, National University of San Marcos (UNMSM). Member of RIBEC.",
     lines: "Flora andina.",
-    lines_en: "Andean flora."
+    lines_en: "Andean flora.",
+    orcid: "0009-0003-2825-3819"
   }
 };
 
@@ -188,3 +189,30 @@ const TEXTOS = {
 
 // Tipos de publicación en inglés
 const TYPES_EN = { A: "Article", P: "Preprint", C: "Conference paper", O: "Poster", K: "Book chapter" };
+
+// Temas (tags) de las publicaciones. Cada publicación recibe automáticamente los temas
+// cuyas palabras clave aparecen en su título. Las palabras se escriben en minúsculas y
+// sin tildes; "|" separa alternativas. Para crear un tema nuevo, copia una línea y cámbiala.
+const TAGS = {
+  amazonia:    { es: "Amazonía",                    en: "Amazon",                     re: /amazon|aguajal|alto mayo|san martin|sierra del divisor|cordillera azul|iquitos|tingana|renacal|piedemonte|piedmont|inkaterra/ },
+  andes:       { es: "Andes",                       en: "Andes",                      re: /andes|andin|cajatambo|polylepis|ceroxylon|minthostachys|mynthostachys|muna|paramo|altitudinal|sumbilca|gentianella|cusco|victor fajardo|obrajillo|unchus|unchos/ },
+  humedales:   { es: "Humedales y aguajales",       en: "Wetlands and palm swamps",   re: /aguajal|mauritia|turbera|peat|humedal|inundab|flooded|floodplain|renacal|wetland|swamp/ },
+  urbana:      { es: "Ecología urbana",             en: "Urban ecology",              re: /\burban|ciudad|universidad nacional mayor de san marcos|luz artificial|parque ecologico|yacimiento arqueologico/ },
+  flora:       { es: "Flora y botánica",            en: "Flora and botany",           re: /flora|floristic|vegetac|vegetal|epifit|epiphyt|vanilla|gentianella|minthostachys|mynthostachys|muna|ceroxylon|polylepis|orchid|mauritia/ },
+  bosques:     { es: "Bosques, biomasa y carbono",  en: "Forests, biomass and carbon", re: /biomas|carbon|tomograph|woodland|relict|forest/ },
+  hongos:      { es: "Hongos",                      en: "Fungi",                      re: /fung|hongo|psilocybe/ },
+  insectos:    { es: "Insectos y artrópodos",       en: "Insects and arthropods",     re: /insect|entomo|hormiga|\bants?\b|mantodea|musonia|loxosceles|hadruroides|anchotatus|microcoema/ },
+  tardigrados: { es: "Tardígrados",                 en: "Tardigrades",                re: /tardigr/ },
+  aves:        { es: "Aves",                        en: "Birds",                      re: /avifauna|jabiru|charadrius|tyrannus|conirostrum|passeriform/ },
+  vertebrados: { es: "Mamíferos, reptiles y peces", en: "Mammals, reptiles and fish", re: /coendou|roedor|rodentia|microlophus|sauria|belonidae|ictiolog/ },
+  interacciones: { es: "Comportamiento e interacciones", en: "Behaviour and interactions", re: /mutualis|jardines de hormigas|ant gardens|ant-plant|canibalismo|coexistencia|forrajeo|anidacion/ },
+  etnobotanica: { es: "Etnobotánica",               en: "Ethnobotany",                re: /etnobot|conocimientos tradicionales|uso de las plantas|usos de la flora|muna|uso antropico/ },
+  algas:       { es: "Algas y biorremediación",     en: "Algae and bioremediation",   re: /alga|desmodesmus|mougeotia|spirogyra|ficorremed|cadmio/ },
+  astro:       { es: "Astrobiología",               en: "Astrobiology",               re: /biofilm|espaci|astrobiolog/ },
+  evolucion:   { es: "Evolución y teoría",          en: "Evolution and theory",       re: /evoluci|evolutiv|termodinamica|pseudogen|filogeograf|naturaleza disciplinaria|metodo cientifico/ },
+  registros:   { es: "Nuevos registros",            en: "New records",                re: /registro|reporte|presencia de|ampliacion/ },
+  conservacion: { es: "Conservación",               en: "Conservation",               re: /conserva|amenaza|anthropogenic|human disturbance|manejo|sostenible/ },
+  datos:       { es: "Estadística y modelos",       en: "Statistics and modelling",   re: /estadistic|multivariant|discrimina|observaciones influyentes|observacoes|modeliza|distribucion potencial|morfometric/ },
+  biotec:      { es: "Biotecnología vegetal",       en: "Plant biotechnology",        re: /in vitro|propagacion vegetativa|cultivo de celulas/ },
+  social:      { es: "Salud y sociedad",            en: "Health and society",         re: /residuos|hospital|discapacidad|salud|laboral/ }
+};

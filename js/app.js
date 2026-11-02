@@ -53,6 +53,12 @@ const plain = s => String(s).replace(/\*/g, "").normalize("NFD").replace(/[̀-ͯ
 const memberNames = Object.values(MEMBERS).flatMap(m => [m.name, ...(m.alias || [])]);
 const pubsOf = k => PUBS.filter(p => p[6].includes(k));
 
+// Temas de cada publicación, calculados una sola vez a partir de su título
+const pubTags = new Map(PUBS.map(p => [p, Object.keys(TAGS).filter(k => TAGS[k].re.test(plain(p[3])))]));
+const tagName = k => TAGS[k][isEn ? "en" : "es"];
+const chipHTML = (k, pressed, count) =>
+  `<button type="button" class="chip" data-tag="${k}" aria-pressed="${pressed}">${esc(k ? tagName(k) : (isEn ? "All topics" : "Todos los temas"))}${count != null ? `<small>${count}</small>` : ""}</button>`;
+
 function authorsHTML(a) {
   return a.split(" · ").map(n => {
     if (n === "[…]") return "et al.";
@@ -72,7 +78,8 @@ function refHTML(p) {
     x.doi ? `<a href="https://doi.org/${esc(x.doi)}" target="_blank" rel="noopener">DOI</a>` : "",
     x.pdf ? `<a href="articulos/${esc(x.pdf)}" target="_blank" rel="noopener">${x.pdf.endsWith(".png") ? typeName("O") : "PDF"}</a>` : ""
   ].filter(Boolean).join(" · ");
-  return `<li><span class="au">${authorsHTML(authors)}</span>. <span class="ti">${italic(title)}</span>. ${venue}${links ? ` <span class="lk">${links}</span>` : ""}</li>`;
+  const tags = pubTags.get(p).map(k => chipHTML(k, false)).join("");
+  return `<li><span class="au">${authorsHTML(authors)}</span>. <span class="ti">${italic(title)}</span>. ${venue}${links ? ` <span class="lk">${links}</span>` : ""}${tags ? ` <span class="tg">${tags}</span>` : ""}</li>`;
 }
 
 /* ---------- Inicio ---------- */
@@ -113,16 +120,38 @@ const who = document.getElementById("who");
 if (who) {
   const q = document.getElementById("q");
   Object.entries(MEMBERS).forEach(([k, m]) => who.add(new Option(m.name, k)));
-  const wanted = new URLSearchParams(location.search).get("autor");
+  const params = new URLSearchParams(location.search);
+  const wanted = params.get("autor");
   if (wanted && MEMBERS[wanted]) who.value = wanted;
+  let tag = TAGS[params.get("tema")] ? params.get("tema") : "";
+  const tagbar = document.getElementById("tagbar");
+
+  // Guarda el tema elegido en la dirección, para poder compartir el enlace filtrado
+  function setTag(k) {
+    tag = k === tag ? "" : k;
+    try {
+      const u = new URL(location.href);
+      tag ? u.searchParams.set("tema", tag) : u.searchParams.delete("tema");
+      history.replaceState(null, "", u.pathname + u.search + u.hash);
+    } catch (e) { /* al abrir el archivo localmente algunos navegadores no lo permiten */ }
+    renderPubs();
+    tagbar.scrollIntoView({ block: "nearest" });
+  }
 
   function renderPubs() {
     const f = who.value, s = plain(q.value.trim());
-    const items = PUBS.filter(p =>
+    const base = PUBS.filter(p =>
       (f === "all" || p[6].includes(f)) &&
-      (!s || plain(p[3] + " " + p[4] + " " + p[5] + " " + typeName(p[2])).includes(s)));
+      (!s || plain(p[3] + " " + p[4] + " " + p[5] + " " + typeName(p[2]) + " " + pubTags.get(p).map(tagName).join(" ")).includes(s)));
+    const items = tag ? base.filter(p => pubTags.get(p).includes(tag)) : base;
+
+    // Barra de temas: solo muestra los que tienen publicaciones con los filtros actuales
+    const n = {};
+    base.forEach(p => pubTags.get(p).forEach(k => n[k] = (n[k] || 0) + 1));
+    tagbar.innerHTML = chipHTML("", !tag) + Object.keys(TAGS).filter(k => n[k] || k === tag).map(k => chipHTML(k, k === tag, n[k] || 0)).join("");
+
     document.getElementById("count").textContent =
-      `${items.length} ${items.length === 1 ? (isEn ? "work" : "referencia") : (isEn ? "works" : "referencias")}${f === "all" ? "" : " " + (isEn ? "by" : "de") + " " + MEMBERS[f].name}${s ? " " + (isEn ? "matching the search" : "que coinciden con la búsqueda") : ""}. ${isEn ? "Group members are shown in bold." : "Los miembros del grupo aparecen en negrita."}`;
+      `${items.length} ${items.length === 1 ? (isEn ? "work" : "referencia") : (isEn ? "works" : "referencias")}${f === "all" ? "" : " " + (isEn ? "by" : "de") + " " + MEMBERS[f].name}${tag ? " " + (isEn ? "on" : "sobre") + " «" + tagName(tag) + "»" : ""}${s ? " " + (isEn ? "matching the search" : "que coinciden con la búsqueda") : ""}. ${isEn ? "Group members are shown in bold." : "Los miembros del grupo aparecen en negrita."}`;
     const list = document.getElementById("list"), nav = document.getElementById("pubnav");
     if (!items.length) { list.innerHTML = `<p class="empty">${isEn ? "No works match that search." : "No hay referencias con ese texto."}</p>`; nav.innerHTML = ""; return; }
     const pre = items.filter(p => p[2] === "P");
@@ -137,5 +166,10 @@ if (who) {
   }
   who.addEventListener("change", renderPubs);
   q.addEventListener("input", renderPubs);
+  // Un clic en cualquier tema (en la barra o en una referencia) filtra por ese tema
+  document.addEventListener("click", e => {
+    const b = e.target.closest("button.chip[data-tag]");
+    if (b) setTag(b.dataset.tag);
+  });
   renderPubs();
 }
